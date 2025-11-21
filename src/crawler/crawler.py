@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: MIT
 
 
-from .article import Article
-from .jina_client import JinaClient
-from .readability_extractor import ReadabilityExtractor
+from src.crawler.article import Article
+from src.crawler.jina_client import JinaClient
+from src.crawler.readability_extractor import ReadabilityExtractor
 
 
 class Crawler:
@@ -25,3 +25,12 @@ class Crawler:
         article = extractor.extract_article(html)
         article.url = url
         return article
+
+
+if __name__ == '__main__':
+    import os
+    os.environ["JINA_API_KEY"] = "jina_03cb4a11098e439a83dc069674f173b6u4R2V5K01SB4ZdDVA2U1Zl5hkaB2"
+    crawler = Crawler()
+    url = 'https://www.taiwu.com/ershoufang/TWS2025062700014.html'
+    article = crawler.crawl(url)
+    print(article.to_markdown())

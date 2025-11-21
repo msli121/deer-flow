@@ -7,7 +7,7 @@ import { AboutTab } from "./about-tab";
 import { GeneralTab } from "./general-tab";
 import { MCPTab } from "./mcp-tab";
 
-export const SETTINGS_TABS = [GeneralTab, MCPTab, AboutTab].map((tab) => {
+export const SETTINGS_TABS = [GeneralTab, MCPTab].map((tab) => {
   const name = tab.displayName ?? tab.name;
   return {
     ...tab,

@@ -76,7 +76,7 @@
   },
   "chat": {
     "page": {
-        "loading": "Loading DeerFlow...",
+        "loading": "Loading ...",
         "welcomeUser": "Welcome, {username}",
         "starOnGitHub": "Star DeerFlow on GitHub"
     },

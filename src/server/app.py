@@ -68,7 +68,7 @@ logger.info(f"Allowed origins: {allowed_origins}")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,  # Restrict to specific origins
+    allow_origins=["*"],  # Restrict to specific origins
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],  # Use the configured list of methods
     allow_headers=["*"],  # Now allow all headers, but can be restricted further

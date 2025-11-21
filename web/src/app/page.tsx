@@ -18,12 +18,12 @@ export default function HomePage() {
       <SiteHeader />
       <main className="container flex flex-col items-center justify-center gap-56">
         <Jumbotron />
-        <CaseStudySection />
-        <MultiAgentSection />
-        <CoreFeatureSection />
-        <JoinCommunitySection />
+        {/*<CaseStudySection />*/}
+        {/*<MultiAgentSection />*/}
+        {/*<CoreFeatureSection />*/}
+        {/*<JoinCommunitySection />*/}
       </main>
-      <Footer />
+      {/*<Footer />*/}
       <Ray />
     </div>
   );

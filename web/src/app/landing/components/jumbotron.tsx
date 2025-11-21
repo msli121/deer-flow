@@ -28,7 +28,7 @@ export function Jumbotron() {
       />
       <FlickeringGrid
         id="deer-hero"
-        className="absolute inset-0 z-0 translate-y-[2vh] mask-[url(/images/deer-hero.svg)] mask-size-[100vw] mask-center mask-no-repeat md:mask-size-[72vh]"
+        className="absolute inset-0 z-0 translate-y-[2vh] mask-[url(/images/xiaotai.svg)] mask-size-[100vw] mask-center mask-no-repeat md:mask-size-[72vh]"
         squareSize={3}
         gridGap={6}
         color="#60A5FA"
@@ -52,9 +52,7 @@ export function Jumbotron() {
                 env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY ? "_blank" : undefined
               }
               href={
-                env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY
-                  ? "https://github.com/bytedance/deer-flow"
-                  : "/chat"
+                "/chat"
               }
             >
               {tCommon('getStarted')} <ChevronRight />
@@ -67,20 +65,20 @@ export function Jumbotron() {
               variant="outline"
               asChild
             >
-              <Link
-                href="https://github.com/bytedance/deer-flow"
-                target="_blank"
-              >
-                <GithubFilled />
-                {tCommon('learnMore')}
-              </Link>
+              {/*<Link*/}
+              {/*  href="https://github.com/bytedance/deer-flow"*/}
+              {/*  target="_blank"*/}
+              {/*>*/}
+              {/*  <GithubFilled />*/}
+              {/*  {tCommon('learnMore')}*/}
+              {/*</Link>*/}
             </Button>
           )}
         </div>
       </div>
-      <div className="absolute bottom-8 flex text-xs opacity-50">
-        <p>{t('footnote')}</p>
-      </div>
+      {/*<div className="absolute bottom-8 flex text-xs opacity-50">*/}
+      {/*  <p>{t('footnote')}</p>*/}
+      {/*</div>*/}
     </section>
   );
 }
