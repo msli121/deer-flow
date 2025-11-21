@@ -8,6 +8,7 @@ from typing import Any, Dict, get_args
 import httpx
 from langchain_core.language_models import BaseChatModel
 from langchain_deepseek import ChatDeepSeek
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
 
 from src.config import load_yaml_config
@@ -66,6 +67,10 @@ def _create_llm_use_conf(llm_type: LLMType, conf: Dict[str, Any]) -> BaseChatMod
     # Merge configurations, with environment variables taking precedence
     merged_conf = {**llm_conf, **env_conf}
 
+    # Remove unnecessary parameters when initializing the client
+    if "token_limit" in merged_conf:
+        merged_conf.pop("token_limit")
+
     if not merged_conf:
         raise ValueError(f"No configuration found for LLM type: {llm_type}")
 
@@ -82,6 +87,28 @@ def _create_llm_use_conf(llm_type: LLMType, conf: Dict[str, Any]) -> BaseChatMod
         http_async_client = httpx.AsyncClient(verify=False)
         merged_conf["http_client"] = http_client
         merged_conf["http_async_client"] = http_async_client
+
+    # Check if it's Google AI Studio platform based on configuration
+    platform = merged_conf.get("platform", "").lower()
+    is_google_aistudio = platform == "google_aistudio" or platform == "google-aistudio"
+
+    if is_google_aistudio:
+        # Handle Google AI Studio specific configuration
+        gemini_conf = merged_conf.copy()
+
+        # Map common keys to Google AI Studio specific keys
+        if "api_key" in gemini_conf:
+            gemini_conf["google_api_key"] = gemini_conf.pop("api_key")
+
+        # Remove base_url and platform since Google AI Studio doesn't use them
+        gemini_conf.pop("base_url", None)
+        gemini_conf.pop("platform", None)
+
+        # Remove unsupported parameters for Google AI Studio
+        gemini_conf.pop("http_client", None)
+        gemini_conf.pop("http_async_client", None)
+
+        return ChatGoogleGenerativeAI(**gemini_conf)
 
     if "azure_endpoint" in merged_conf or os.getenv("AZURE_OPENAI_ENDPOINT"):
         return AzureChatOpenAI(**merged_conf)
@@ -149,6 +176,25 @@ def get_configured_llm_models() -> dict[str, list[str]]:
         # Log error and return empty dict to avoid breaking the application
         print(f"Warning: Failed to load LLM configuration: {e}")
         return {}
+
+
+def get_llm_token_limit_by_type(llm_type: str) -> int:
+    """
+    Get the maximum token limit for a given LLM type.
+
+    Args:
+        llm_type (str): The type of LLM.
+
+    Returns:
+        int: The maximum token limit for the specified LLM type.
+    """
+
+    llm_type_config_keys = _get_llm_type_config_keys()
+    config_key = llm_type_config_keys.get(llm_type)
+
+    conf = load_yaml_config(_get_config_file_path())
+    llm_max_token = conf.get(config_key, {}).get("token_limit")
+    return llm_max_token
 
 
 # In the future, we will use reasoning_llm and vl_llm for different purposes

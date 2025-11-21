@@ -6,11 +6,13 @@ import logging
 import uuid
 from datetime import datetime
 from typing import List, Optional, Tuple
+
 import psycopg
+from langgraph.store.memory import InMemoryStore
 from psycopg.rows import dict_row
 from pymongo import MongoClient
-from langgraph.store.memory import InMemoryStore
-from src.config.configuration import get_bool_env, get_str_env
+
+from src.config.loader import get_bool_env, get_str_env
 
 
 class ChatStreamManager:
@@ -368,5 +370,4 @@ def chat_stream_message(thread_id: str, message: str, finish_reason: str) -> boo
             thread_id, message, finish_reason
         )
     else:
-        # logging.warning("Checkpoint saver is disabled, message not processed")
         return False

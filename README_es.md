@@ -138,6 +138,9 @@ Este proyecto también incluye una Interfaz Web, que ofrece una experiencia inte
 # En Windows
 bootstrap.bat -d
 ```
+> [!NOTA]
+> Por defecto, el servidor backend se enlaza a 127.0.0.1 (localhost) por razones de seguridad. Si necesitas permitir conexiones externas (por ejemplo, al desplegar en un servidor Linux), puedes modificar el host del servidor a 0.0.0.0 en el script de arranque (uv run server.py --host 0.0.0.0).
+> Por favor, asegúrate de que tu entorno esté correctamente protegido antes de exponer el servicio a redes externas.
 
 Abre tu navegador y visita [`http://localhost:3000`](http://localhost:3000) para explorar la interfaz web.
 
@@ -164,6 +167,10 @@ DeerFlow soporta múltiples motores de búsqueda que pueden configurarse en tu a
 - **Arxiv**: Búsqueda de artículos científicos para investigación académica
   - No requiere clave API
   - Especializado en artículos científicos y académicos
+
+- **Searx/SearxNG**: Motor de metabúsqueda autoalojado
+  - Requiere `SEARX_HOST` en tu archivo `.env`
+  - Compatible con Searx o SearxNG
 
 Para configurar tu motor de búsqueda preferido, establece la variable `SEARCH_API` en tu archivo `.env`:
 

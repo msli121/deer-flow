@@ -21,7 +21,6 @@ import "~/styles/prosemirror.css";
 import { resourceSuggestion } from "./resource-suggestion";
 import React, { forwardRef, useEffect, useMemo, useRef } from "react";
 import type { Resource } from "~/core/messages";
-import { useConfig } from "~/core/api/hooks";
 import { LoadingOutlined } from "@ant-design/icons";
 import type { DeerFlowConfig } from "~/core/config";
 
@@ -185,7 +184,7 @@ const MessageInput = forwardRef<MessageInputRef, MessageInputProps>(
           <EditorContent
             immediatelyRender={false}
             extensions={extensions}
-            className="border-muted h-full w-full overflow-auto"
+            className="border-muted h-full w-full overflow-auto break-words"
             editorProps={{
               attributes: {
                 class:

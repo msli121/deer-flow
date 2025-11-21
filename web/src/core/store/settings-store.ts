@@ -10,6 +10,8 @@ const SETTINGS_KEY = "deerflow.settings";
 const DEFAULT_SETTINGS: SettingsState = {
   general: {
     autoAcceptedPlan: false,
+    enableClarification: false,
+    maxClarificationRounds: 3,
     enableDeepThinking: false,
     enableBackgroundInvestigation: false,
     maxPlanIterations: 1,
@@ -25,12 +27,14 @@ const DEFAULT_SETTINGS: SettingsState = {
 export type SettingsState = {
   general: {
     autoAcceptedPlan: boolean;
+    enableClarification: boolean;
+    maxClarificationRounds: number;
     enableDeepThinking: boolean;
     enableBackgroundInvestigation: boolean;
     maxPlanIterations: number;
     maxStepNum: number;
     maxSearchResults: number;
-    reportStyle: "academic" | "popular_science" | "news" | "social_media";
+    reportStyle: "academic" | "popular_science" | "news" | "social_media" | "strategic_investment";
   };
   mcp: {
     servers: MCPServerMetadata[];
@@ -94,7 +98,7 @@ export const getChatStreamSettings = () => {
   if (mcpServers.length > 0) {
     mcpSettings = {
       servers: mcpServers.reduce((acc, cur) => {
-        const { transport, env } = cur;
+        const { transport, env, headers } = cur;
         let server: SimpleMCPServerMetadata;
         if (transport === "stdio") {
           server = {
@@ -108,7 +112,7 @@ export const getChatStreamSettings = () => {
           server = {
             name: cur.name,
             transport,
-            env,
+            headers,
             url: cur.url,
           };
         }
@@ -130,7 +134,7 @@ export const getChatStreamSettings = () => {
 };
 
 export function setReportStyle(
-  value: "academic" | "popular_science" | "news" | "social_media",
+  value: "academic" | "popular_science" | "news" | "social_media" | "strategic_investment",
 ) {
   useSettingsStore.setState((state) => ({
     general: {
@@ -156,6 +160,16 @@ export function setEnableBackgroundInvestigation(value: boolean) {
     general: {
       ...state.general,
       enableBackgroundInvestigation: value,
+    },
+  }));
+  saveSettings();
+}
+
+export function setEnableClarification(value: boolean) {
+  useSettingsStore.setState((state) => ({
+    general: {
+      ...state.general,
+      enableClarification: value,
     },
   }));
   saveSettings();

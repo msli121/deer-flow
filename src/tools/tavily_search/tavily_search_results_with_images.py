@@ -9,7 +9,9 @@ from langchain.callbacks.manager import (
     AsyncCallbackManagerForToolRun,
     CallbackManagerForToolRun,
 )
-from langchain_tavily.tavily_search import TavilySearch
+
+# from langchain_tavily.tavily_search import TavilySearch
+from langchain_community.tools.tavily_search.tool import TavilySearchResults
 from pydantic import Field
 
 from src.tools.tavily_search.tavily_search_api_wrapper import (
@@ -19,7 +21,7 @@ from src.tools.tavily_search.tavily_search_api_wrapper import (
 logger = logging.getLogger(__name__)
 
 
-class TavilySearchWithImages(TavilySearch):  # type: ignore[override, override]
+class TavilySearchWithImages(TavilySearchResults):  # type: ignore[override, override]
     """Tool that queries the Tavily Search API and gets back json.
 
     Setup:
@@ -126,12 +128,15 @@ class TavilySearchWithImages(TavilySearch):  # type: ignore[override, override]
                 self.include_image_descriptions,
             )
         except Exception as e:
-            return repr(e), {}
+            logger.error("Tavily search returned error: {}".format(e))
+            error_result = json.dumps({"error": repr(e)}, ensure_ascii=False)
+            return error_result, {}
         cleaned_results = self.api_wrapper.clean_results_with_images(raw_results)
         logger.debug(
             "sync: %s", json.dumps(cleaned_results, indent=2, ensure_ascii=False)
         )
-        return cleaned_results, raw_results
+        result_json = json.dumps(cleaned_results, ensure_ascii=False)
+        return result_json, raw_results
 
     async def _arun(
         self,
@@ -152,9 +157,12 @@ class TavilySearchWithImages(TavilySearch):  # type: ignore[override, override]
                 self.include_image_descriptions,
             )
         except Exception as e:
-            return repr(e), {}
+            logger.error("Tavily search returned error: {}".format(e))
+            error_result = json.dumps({"error": repr(e)}, ensure_ascii=False)
+            return error_result, {}
         cleaned_results = self.api_wrapper.clean_results_with_images(raw_results)
         logger.debug(
             "async: %s", json.dumps(cleaned_results, indent=2, ensure_ascii=False)
         )
-        return cleaned_results, raw_results
+        result_json = json.dumps(cleaned_results, ensure_ascii=False)
+        return result_json, raw_results
